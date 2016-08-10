@@ -25,6 +25,7 @@ app.use(route.head('/', books.head));
 
 app.use(route.get('/markdown/convertToHtml', markdown.convertToHtml));
 app.use(route.get('/getHubDocsUrls', markdown.getHubDocsUrls));
+app.use(route.get('/test', markdown.getContentsOfFile));
 
 
 
