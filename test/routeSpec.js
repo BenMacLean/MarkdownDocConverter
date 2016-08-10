@@ -8,26 +8,19 @@ function request() {
 }
 
 describe('Routes', function() {
-  describe('GET /', function() {
+  describe('GET /test', function() {
     it('should return 200', function(done) {
       request()
-        .get('/')
+        .get('/test')
         .expect(200, done);
     });
   });
-  describe('GET /books', function() {
-    it('should return 200', function(done) {
+  describe('GET /test', function() {
+    it('should return 200 and json', function(done) {
       request()
-        .get('/books')
+        .get('/test')
         .expect('Content-Type', /json/)
         .expect(200, done);
-    });
-  });
-  describe('GET /books/notfound', function() {
-    it('should return 404', function(done) {
-      request()
-        .get('/books/notfound')
-        .expect(404, done);
     });
   });
 });
