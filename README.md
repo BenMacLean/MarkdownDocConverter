@@ -1,4 +1,13 @@
-#koa-REST
+#Markdown Doc Converter
+
+## How it works
+A user updates the docs in github in a folder
+
+A github webhook tells this app to get all the readmes and store them in a DB
+
+This app reads the DB and serves back the html
+
+
 
 > REST demo with koa.
 

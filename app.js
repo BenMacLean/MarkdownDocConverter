@@ -23,7 +23,8 @@ app.use(route.options('/', books.options));
 app.use(route.trace('/', books.trace));
 app.use(route.head('/', books.head));
 
-app.use(route.head('/markdown/convertToHtml', markdown.convertToHtml));
+app.use(route.get('/markdown/convertToHtml', markdown.convertToHtml));
+app.use(route.get('/getHubDocsUrls', markdown.getHubDocsUrls));
 
 
 
