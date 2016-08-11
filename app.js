@@ -16,7 +16,7 @@ const markdown = require('./controllers/markdown');
 app.use(logger());
 
 // Markdown Routing
-app.use(route.get('/listenForGithubChanges', markdown.listenForGithubChanges));
+app.use(route.post('/listenForGithubChanges', markdown.listenForGithubChanges));
 app.use(route.get('/getAllRepoFilePaths/:user/:repo', markdown.getAllRepoFilePaths));
 app.use(route.get('/getHtmlForFilePath/:user/:repo/:path', markdown.getHtmlForFilePath));
 
