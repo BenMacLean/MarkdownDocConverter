@@ -9,6 +9,8 @@ module.exports.listenForGithubChanges = function* listenForGithubChanges() {
   // Update all the files needed in the database
     // Check for the ones that changed or get them all
 
+  console.log(this);
+
   yield file.create({name: 'foo'});
 
   this.body = yield [];
