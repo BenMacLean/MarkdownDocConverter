@@ -13,6 +13,9 @@ const app = module.exports = koa();
 // My Files Import
 const markdown = require('./controllers/markdown');
 
+// body parser
+app.use(bodyParser());
+
 // Logger
 app.use(logger());
 
@@ -26,9 +29,6 @@ app.use(serve(path.join(__dirname, 'public')));
 
 // Compress
 app.use(compress());
-
-// body parser
-app.use(bodyParser());
 
 if (!module.parent) {
   app.listen(process.env.PORT || 1337);
