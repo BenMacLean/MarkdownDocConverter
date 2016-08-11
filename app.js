@@ -1,26 +1,24 @@
 'use strict';
 
 // Libraries Import
-var compress = require('koa-compress');
-var logger = require('koa-logger');
-var serve = require('koa-static');
-var route = require('koa-route');
-var koa = require('koa');
-var path = require('path');
-var app = module.exports = koa();
+const compress = require('koa-compress');
+const logger = require('koa-logger');
+const serve = require('koa-static');
+const route = require('koa-route');
+const koa = require('koa');
+const path = require('path');
+const app = module.exports = koa();
 
 // My Files Import
-var markdown = require('./controllers/markdown');
+const markdown = require('./controllers/markdown');
 
 // Logger
 app.use(logger());
 
-// Routing
-app.use(route.get('/listAllRepoFiles/:user/:repo', markdown.listAllRepoFiles));
-app.use(route.get('/convertMarkdownToHtml/:user/:repo/:path', markdown.convertMarkdownToHtml));
-//app.use(route.get('/markdown/getContentsOfFile', markdown.getContentsOfFile));
-
-app.use(route.post('/githubWebhook', markdown.githubWebhook));
+// Markdown Routing
+app.use(route.get('/listenForGithubChanges', markdown.listenForGithubChanges));
+app.use(route.get('/getAllRepoFilePaths/:user/:repo', markdown.getAllRepoFilePaths));
+app.use(route.get('/getHtmlForFilePath/:user/:repo/:path', markdown.getHtmlForFilePath));
 
 // Serve static files
 app.use(serve(path.join(__dirname, 'public')));

@@ -1,9 +1,17 @@
 'use strict';
 const marked = require('marked');
 const request = require('koa-request');
-const dataStorage = require('../services/dataStorage');
+const dataStorage = require('../services/data');
 
-module.exports.listAllRepoFiles = function* listAllRepoFiles(user, repo) {
+module.exports.listenForGithubChanges = function* listenForGithubChanges(user, repo) {
+  // Get called by github
+  // Update the files needed in the database
+};
+
+module.exports.getAllRepoFilePaths = function* getAllRepoFilePaths(user, repo) {
+  // Called by the Docs UI tool
+  // Return all the files in the repo as an array of paths
+
   // This will go to github and get all the docs for the readme repo. It returns an array of all file paths
   // https://developer.github.com/v3/git/trees/
   // Getting all files recursively with ?recursive=1
@@ -32,7 +40,10 @@ module.exports.listAllRepoFiles = function* listAllRepoFiles(user, repo) {
   this.body = docs;
 };
 
-module.exports.convertMarkdownToHtml = function* convertMarkdownToHtml(user, repo, path) {
+module.exports.getHtmlForFilePath = function* getHtmlForFilePath(user, repo) {
+  // Called by the Docs UI tool
+  // Grab the html from the database that matches the path
+
   // Gets the contents of the file based on the path attribute that comes back from github
   // https://developer.github.com/v3/repos/contents/
   // GET /repos/:owner/:repo/contents/:path
@@ -67,11 +78,4 @@ module.exports.convertMarkdownToHtml = function* convertMarkdownToHtml(user, rep
   this.body = {
     html: marked(response2.body)
   };
-};
-
-module.exports.githubWebhook = function* githubWebhook() {
-
-  console.log('Something was changed in the git repo');
-
-  this.body = dataStorage.getData();
 };
