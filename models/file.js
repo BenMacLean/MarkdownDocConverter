@@ -1,8 +1,8 @@
 'use strict';
-const config = require('../config.json');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://0.0.0.0:27017/test');
+// mongoose.connect('mongodb://0.0.0.0:27017/test');
+mongoose.connect(process.env.DB);
 
 module.exports.create = function* create(options) {
   // Create a file with the path and the html doc contents
