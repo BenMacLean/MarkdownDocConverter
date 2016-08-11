@@ -1,4 +1,4 @@
-#Markdown Doc Converter
+# Markdown Doc Converter
 
 ## How it works
 A user updates the docs in github in a folder
@@ -8,7 +8,7 @@ A github webhook tells this app to get all the readmes and store them in a DB
 This app reads the DB and serves back the html
 
 
-
+## How Koa Rest works
 > REST demo with koa.
 
 This is a simple demo of RESTful API with [koajs](http://koajs.com/) checkout the [live demo](http://lexicon-tactic.codio.io:1337/)
