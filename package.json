@@ -1,5 +1,6 @@
 {
-  "name": "koa-rest",
+  "name": "markdown-converter",
+  "engines" : { "node" : ">=6.2.2", "npm": ">=3.9.5" },
   "version": "1.0.0",
   "private": true,
   "scripts": {
