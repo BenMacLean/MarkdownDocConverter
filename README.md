@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/BroadsoftLabs/MarkdownDocConverter.svg?branch=master)](https://travis-ci.org/BroadsoftLabs/MarkdownDocConverter)
 
 # Markdown Doc Converter
 
