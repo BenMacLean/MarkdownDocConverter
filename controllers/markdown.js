@@ -10,6 +10,7 @@ module.exports.listenForGithubChanges = function* listenForGithubChanges() {
     // Check for the ones that changed or get them all
 
   console.log(this.req);
+  console.log(this.res);
 
   yield file.create({name: 'foo'});
 
