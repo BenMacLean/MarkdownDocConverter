@@ -1,7 +1,7 @@
 'use strict';
-module.exports.githubWebhook = function* githubWebhook() {
+module.exports.getData = () => {
 
   console.log('Something was changed in the git repo');
 
-  this.body = yield [];
+  return 'Hello World';
 };

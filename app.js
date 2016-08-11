@@ -11,7 +11,6 @@ var app = module.exports = koa();
 
 // My Files Import
 var markdown = require('./controllers/markdown');
-var dataStorage = require('./services/dataStorage');
 
 // Logger
 app.use(logger());
@@ -21,7 +20,7 @@ app.use(route.get('/listAllRepoFiles/:user/:repo', markdown.listAllRepoFiles));
 app.use(route.get('/convertMarkdownToHtml/:user/:repo/:path', markdown.convertMarkdownToHtml));
 //app.use(route.get('/markdown/getContentsOfFile', markdown.getContentsOfFile));
 
-app.use(route.post('/githubWebhook', dataStorage.githubWebhook));
+app.use(route.post('/githubWebhook', markdown.githubWebhook));
 
 // Serve static files
 app.use(serve(path.join(__dirname, 'public')));
