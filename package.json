@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
+    "start": "./node_modules/.bin/nodemon -e js app.js",
+    "startProd": "node app.js",
     "test": "mocha"
   },
   "dependencies": {
@@ -18,12 +19,17 @@
     "koa-route": "^2.4.0",
     "koa-static": "^2.0.0",
     "marked": "^0.3.6",
+    "mongo": "^0.1.0",
+    "mongoose": "^4.5.8",
     "monk": "^3.0.5",
     "swig": "^1.4.2"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^3.2.2",
     "mocha": "^2.1.0",
+    "nodemon": "^1.10.0",
+    "should": "^11.0.0",
     "supertest": "^2.0.0"
   }
 }

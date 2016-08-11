@@ -1,11 +1,17 @@
 'use strict';
 const marked = require('marked');
+const file = require('../models/file.js');
+const util = require('../services/util');
 const request = require('koa-request');
-const dataStorage = require('../services/data');
 
-module.exports.listenForGithubChanges = function* listenForGithubChanges(user, repo) {
-  // Get called by github
-  // Update the files needed in the database
+module.exports.listenForGithubChanges = function* listenForGithubChanges() {
+  // Get called by github - This has to be live for this to work
+  // Update all the files needed in the database
+    // Check for the ones that changed or get them all
+
+  yield file.create({name: 'foo'});
+
+  this.body = yield [];
 };
 
 module.exports.getAllRepoFilePaths = function* getAllRepoFilePaths(user, repo) {
@@ -26,21 +32,10 @@ module.exports.getAllRepoFilePaths = function* getAllRepoFilePaths(user, repo) {
   const response = yield request(options);
   const jsonResult = JSON.parse(response.body);
 
-  // collect all the doc urls for use in other methods
-  const docs = [];
-  jsonResult.tree.forEach((markdownDocument) => {
-    // path is the name of the files
-    if (markdownDocument.type === 'blob') {
-      // Need to url encode the / character so it can be used in other methods as params
-
-      docs.push(encodeURIComponent(markdownDocument.path));
-    }
-  });
-
-  this.body = docs;
+  this.body = util.convertGithubObjectsToArrayOfPaths(jsonResult);
 };
 
-module.exports.getHtmlForFilePath = function* getHtmlForFilePath(user, repo) {
+module.exports.getHtmlForFilePath = function* getHtmlForFilePath(user, repo, path) {
   // Called by the Docs UI tool
   // Grab the html from the database that matches the path
 
