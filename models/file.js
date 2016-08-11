@@ -1,5 +1,5 @@
 'use strict';
-const config = require('../config.json');
+// const config = require('../config.json');
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://0.0.0.0:27017/test');
