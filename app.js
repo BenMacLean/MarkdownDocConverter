@@ -6,7 +6,7 @@ const logger = require('koa-logger');
 const serve = require('koa-static');
 const route = require('koa-route');
 const koa = require('koa');
-const parse = require('co-body');
+const bodyParser = require('koa-bodyparser');
 const path = require('path');
 const app = module.exports = koa();
 
@@ -27,12 +27,8 @@ app.use(serve(path.join(__dirname, 'public')));
 // Compress
 app.use(compress());
 
-app.use(function* bodyParse(next) {
-  if ('POST' != this.method) return yield next;
-  const body = yield parse(this, { limit: '1kb' });
-  if (!body.name) this.throw(400, '.name required');
-  this.body = { name: body.name.toUpperCase() };
-});
+// body parser
+app.use(bodyParser());
 
 if (!module.parent) {
   app.listen(process.env.PORT || 1337);
