@@ -1,16 +1,38 @@
 'use strict';
-const marked = require('marked');
 const file = require('../models/file.js');
 const util = require('../services/util');
+const github = require('../services/github');
+const converter = require('../services/converter');
 const request = require('koa-request');
 
 module.exports.listenForGithubChanges = function* listenForGithubChanges() {
-  // Get called by github - This has to be live for this to work
-  // Update all the files needed in the database
-    // Check for the ones that changed or get them all
+  // [ { id: 'd85b43100f89765410afff5e052a1840da96fe3a',
+  // 2016-08-11T18:42:19.380579+00:00 app[web.1]:     tree_id: '6eb9061f6f661d0f88c420341dea41ac7acef9f1',
+  // 2016-08-11T18:42:19.380580+00:00 app[web.1]:     distinct: true,
+  // 2016-08-11T18:42:19.380580+00:00 app[web.1]:     message: 'Update test.md',
+  // 2016-08-11T18:42:19.380581+00:00 app[web.1]:     timestamp: '2016-08-11T15:10:33-03:00',
+  // 2016-08-11T18:42:19.380583+00:00 app[web.1]:     url: 'https://github.com/BroadsoftLabs/hubDocs/commit/d85b43100f89765410afff5e052a1840da96fe3a',
+  // 2016-08-11T18:42:19.380587+00:00 app[web.1]:     author:
+  // 2016-08-11T18:42:19.380587+00:00 app[web.1]:      { name: 'Jonathan O\'Donnell',
+  // 2016-08-11T18:42:19.380588+00:00 app[web.1]:        email: 'jodonnell@broadsoft.com',
+  // 2016-08-11T18:42:19.380589+00:00 app[web.1]:        username: 'joncodo' },
+  // 2016-08-11T18:42:19.380589+00:00 app[web.1]:     committer:
+  // 2016-08-11T18:42:19.380590+00:00 app[web.1]:      { name: 'GitHub',
+  // 2016-08-11T18:42:19.380590+00:00 app[web.1]:        email: 'noreply@github.com',
+  // 2016-08-11T18:42:19.380591+00:00 app[web.1]:        username: 'web-flow' },
+  // 2016-08-11T18:42:19.380592+00:00 app[web.1]:     added: [],
+  // 2016-08-11T18:42:19.380592+00:00 app[web.1]:     removed: [],
+  // 2016-08-11T18:42:19.380593+00:00 app[web.1]:     modified: [ 'Test1/test.md' ] } ]
 
-  console.log(this.request.body.commits);
-  // console.log(this.res);
+  // Create File in DB
+  const addedFiles = this.request.body.commits[0].added;
+
+  // Delete file in DB
+  const removedFiles = this.request.body.commits[0].removed;
+
+  // Update file in DB
+  const modifiedFiles = this.request.body.commits[0].modified;
+
 
   yield file.create({name: 'foo'});
 
@@ -18,62 +40,35 @@ module.exports.listenForGithubChanges = function* listenForGithubChanges() {
 };
 
 module.exports.getAllRepoFilePaths = function* getAllRepoFilePaths(user, repo) {
-  // Called by the Docs UI tool
-  // Return all the files in the repo as an array of paths
-
-  // This will go to github and get all the docs for the readme repo. It returns an array of all file paths
-  // https://developer.github.com/v3/git/trees/
-  // Getting all files recursively with ?recursive=1
-
-  const options = {
-    url: `https://api.github.com/repos/${user}/${repo}/git/trees/master?recursive=1`,
-    headers: {
-      'User-Agent': 'request'
-    }
-  };
-
-  const response = yield request(options);
-  const jsonResult = JSON.parse(response.body);
-
-  this.body = util.convertGithubObjectsToArrayOfPaths(jsonResult);
+  const allFiles = yield github.getAllFiles(user, repo);
+  this.body = util.convertGithubObjectsToArrayOfPaths(allFiles);
 };
 
 module.exports.getHtmlForFilePath = function* getHtmlForFilePath(user, repo, path) {
-  // Called by the Docs UI tool
-  // Grab the html from the database that matches the path
+  const rawFileUrl = yield github.getRawFileUrl(user, repo, path);
+  const fileContents = yield github.getRawFileFromUrl(rawFileUrl);
 
-  // Gets the contents of the file based on the path attribute that comes back from github
-  // https://developer.github.com/v3/repos/contents/
-  // GET /repos/:owner/:repo/contents/:path
-
-  // First get the url of the raw markdown url as download_url
-  const options = {
-    url: `https://api.github.com/repos/${user}/${repo}/contents/${path}`,
-    headers: {
-      'User-Agent': 'request'
-    }
+  this.body = {
+    html: converter.markdownToHtml(fileContents)
   };
+};
 
-  const response = yield request(options);
-  const jsonResult = yield JSON.parse(response.body);
+module.exports.initDatabase = function* initDatabase(user, repo) {
+  const filesToSaveToDB = [];
+  const allFiles = yield github.getAllFiles(user, repo);
+  const allFilesArray = util.convertGithubObjectsToArrayOfPaths(allFiles);
 
-  // Secondly, do a get request to get the actual markdown
-  const options2 = {
-    url: jsonResult.download_url,
-    headers: {
-      'User-Agent': 'request'
-    }
-  };
-
-  const response2 = yield request(options2);
-
-  // Tell marked how you want it to work
-  marked.setOptions({
-    gfm: true
+  //TODO THIS MAY NOT WORK JON...
+  allFilesArray.forEach(function* convertToHtml(filePath) {
+    const rawFileUrl = yield github.getRawFileUrl(user, repo, filePath);
+    const fileContents = yield github.getRawFileFromUrl(rawFileUrl);
+    filesToSaveToDB.push({
+      html: converter.markdownToHtml(fileContents),
+      path: filePath,
+      repo: repo,
+      user: user
+    });
   });
 
-  // return the markdown convesion to html
-  this.body = {
-    html: marked(response2.body)
-  };
+  // save html to database
 };

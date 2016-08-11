@@ -13,6 +13,10 @@ const app = module.exports = koa();
 // body parser
 app.use(bodyParser());
 
+// Set config
+const config = require('./config.json');
+process.env.DB = config.dbConnectionLocal;
+
 // My Files Import
 const markdown = require('./controllers/markdown');
 
@@ -23,6 +27,7 @@ app.use(logger());
 app.use(route.post('/listenForGithubChanges', markdown.listenForGithubChanges));
 app.use(route.get('/getAllRepoFilePaths/:user/:repo', markdown.getAllRepoFilePaths));
 app.use(route.get('/getHtmlForFilePath/:user/:repo/:path', markdown.getHtmlForFilePath));
+app.use(route.get('/initDatabase/:user/:repo/:path', markdown.initDatabase));
 
 // Serve static files
 app.use(serve(path.join(__dirname, 'public')));
