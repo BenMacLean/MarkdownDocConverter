@@ -10,11 +10,11 @@ const bodyParser = require('koa-bodyparser');
 const path = require('path');
 const app = module.exports = koa();
 
-// My Files Import
-const markdown = require('./controllers/markdown');
-
 // body parser
 app.use(bodyParser());
+
+// My Files Import
+const markdown = require('./controllers/markdown');
 
 // Logger
 app.use(logger());
