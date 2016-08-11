@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "6"
+os:
+  - linux
+  - osx
+env:
+  global:
+    - DBUS_SESSION_BUS_ADDRESS=/dev/null
+
+install:
+  - npm install
+
+script:
+  - npm test
