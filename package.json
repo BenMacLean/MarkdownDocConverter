@@ -23,6 +23,7 @@
     "koa-route": "^2.4.0",
     "koa-static": "^2.0.0",
     "marked": "^0.3.6",
+    "mongodb": "^2.2.5",
     "mongoose": "^4.5.8",
     "monk": "^3.0.5",
     "swig": "^1.4.2"
