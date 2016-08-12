@@ -1,23 +1,17 @@
-console.log('DB Delete');
+const mongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 
+const connectionString = require('../config.json').dbConnectionTest;
 
-var MongoClient = require('mongodb').MongoClient,
-  assert = require('assert');
-
-// Connection URL
-var url = 'mongodb://root:root@ds153775.mlab.com:53775/html';
-
-before(function(done) {
-
-  MongoClient.connect(url, function(err, db) {
-
-    var col = db.collection('file');
-    col.deleteMany({}, function(err, r) {
-      assert.equal(null, err);
+before(function clearDB(done) {
+  // Connect to the test database
+  mongoClient.connect(connectionString, function connectDB(err, db) {
+    const filesCollection = db.collection('file');
+    // Clear all documents in the 'files' collection from test database
+    filesCollection.deleteMany({}, function deleteFilesFromCollection(err, r) {
+      assert.equal(null, err, 'Could not connect to DB');
       db.close();
-      done()
+      done();
     });
-
   });
-
 });
