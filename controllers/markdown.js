@@ -2,6 +2,7 @@
 const file = require('../models/file.js');
 const util = require('../services/util');
 const github = require('../services/github');
+const co = require('co');
 const converter = require('../services/converter');
 const request = require('koa-request');
 
@@ -54,21 +55,31 @@ module.exports.getHtmlForFilePath = function* getHtmlForFilePath(user, repo, pat
 };
 
 module.exports.initDatabase = function* initDatabase(user, repo) {
-  const filesToSaveToDB = [];
+  // TODO clear the DB first before initing. At least for all the files in this repo and for this user
+
+  // Get all the file urls in the repo
   const allFiles = yield github.getAllFiles(user, repo);
+  // Get the urls for the 'raw' view for all the files
   const allFilesArray = util.convertGithubObjectsToArrayOfPaths(allFiles);
 
-  //TODO THIS MAY NOT WORK JON...
-  allFilesArray.forEach(function* convertToHtml(filePath) {
+  // Itterate over the files and create a db model for this.
+  const filesToSaveToDB = [];
+
+  allFilesArray.forEach(co.wrap(function* convertAllFilesToHtml(filePath) {
     const rawFileUrl = yield github.getRawFileUrl(user, repo, filePath);
     const fileContents = yield github.getRawFileFromUrl(rawFileUrl);
+
     filesToSaveToDB.push({
       html: converter.markdownToHtml(fileContents),
       path: filePath,
       repo: repo,
       user: user
     });
-  });
+    // All files array is populated here
+  }));
 
+  console.log('fasdbm', test);
+
+  this.body = 'Working on it bud...';
   // save html to database
 };

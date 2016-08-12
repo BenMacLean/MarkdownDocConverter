@@ -13,6 +13,17 @@ const app = module.exports = koa();
 // body parser
 app.use(bodyParser());
 
+// Error Handling
+app.use(function* tryCatchAllErrors(next) {
+  try {
+    yield next;
+  } catch (err) {
+    this.status = err.status || 500;
+    this.body = err.message;
+    this.app.emit('error', err, this);
+  }
+});
+
 // Set config
 const config = require('./config.json');
 process.env.DB = config.dbConnectionLocal;
@@ -27,7 +38,7 @@ app.use(logger());
 app.use(route.post('/listenForGithubChanges', markdown.listenForGithubChanges));
 app.use(route.get('/getAllRepoFilePaths/:user/:repo', markdown.getAllRepoFilePaths));
 app.use(route.get('/getHtmlForFilePath/:user/:repo/:path', markdown.getHtmlForFilePath));
-app.use(route.get('/initDatabase/:user/:repo/:path', markdown.initDatabase));
+app.use(route.get('/initDatabase/:user/:repo', markdown.initDatabase));
 
 // Serve static files
 app.use(serve(path.join(__dirname, 'public')));

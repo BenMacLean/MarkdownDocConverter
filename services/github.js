@@ -15,6 +15,10 @@ module.exports.getAllFiles = function* getAllFiles(user, repo) {
 
   const response = yield request(options);
 
+  if (!(JSON.parse(response.body) instanceof Array)) {
+    console.log('ERROR: getting access to github', response.body);
+  }
+
   // Return all the files in the repo as an array of paths
   return JSON.parse(response.body);
 };
