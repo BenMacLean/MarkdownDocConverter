@@ -26,7 +26,7 @@ app.use(function* tryCatchAllErrors(next) {
 
 // Set config
 const config = require('./config.json');
-process.env.DB = config.dbConnectionLocal;
+process.env.DB = process.env.DB || config.dbConnectionLocal;
 
 // My Files Import
 const markdown = require('./controllers/markdown');

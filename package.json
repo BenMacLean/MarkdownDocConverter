@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node app.js",
     "startDev": "./node_modules/.bin/nodemon -e js app.js",
-    "test": "mocha"
+    "test": "DB=mongodb://root:root@ds153775.mlab.com:53775/html mocha"
   },
   "dependencies": {
     "co": "^4.4.0",

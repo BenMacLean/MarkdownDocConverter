@@ -1,0 +1,5 @@
+{
+  "dbConnectionLocal": "mongodb://0.0.0.0:27017",
+  "dbConnectionStaging": "mongodb://xxxxxx:xxxxxxx@xxxxxxxxxxxx/html",
+  "dbConnectionTest": "mongodb://root:root@ds153775.mlab.com:53775/html"
+}
