@@ -1,0 +1,4 @@
+{
+  "dbConnectionLocal": "mongodb://0.0.0.0:27017",
+  "dbConnectionStaging": "mongodb://xxxxxx:xxxxxxx@xxxxxxxxxxxx/html"
+}
