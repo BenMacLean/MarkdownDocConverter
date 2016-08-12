@@ -7,6 +7,8 @@ A github webhook tells this app to get all the readmes and store them in a DB
 
 This app reads the DB and serves back the html
 
+In order for this to run, you need to copy the config over and set your values.
+
 
 ## How Koa Rest works
 > REST demo with koa.
